@@ -4,10 +4,9 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.mapred.FileSplit;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-
-import com.sun.jersey.core.impl.provider.entity.XMLJAXBElementProvider.Text;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 public class JoinMapper extends Mapper<LongWritable, Text, OrderBean, NullWritable> {
 
@@ -17,7 +16,7 @@ public class JoinMapper extends Mapper<LongWritable, Text, OrderBean, NullWritab
 	@Override
 	protected void setup(Mapper<LongWritable, Text, OrderBean, NullWritable>.Context context)
 			throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
+
 		FileSplit fs = (FileSplit) context.getInputSplit();//读入文件获取文件名
 		fileName = fs.getPath().getName();
 
@@ -28,7 +27,7 @@ public class JoinMapper extends Mapper<LongWritable, Text, OrderBean, NullWritab
 	protected void map(LongWritable key, Text value,
 			Mapper<LongWritable, Text, OrderBean, NullWritable>.Context context)
 			throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
+
 		String[] fields = value.toString().split(" ");
 		// OID\ODATA\PID\PNAME\PRICE\OAMOUNT
 		if (fileName.equals("product.txt")) {//product表数据赋值
@@ -37,7 +36,7 @@ public class JoinMapper extends Mapper<LongWritable, Text, OrderBean, NullWritab
 			ob.setAll(fields[0], fields[1], fields[2], "", "", fields[3]);
 		}
 		context.write(ob, NullWritable.get());
-		// super.map(key, value, context);
+
 	}
 
 }
